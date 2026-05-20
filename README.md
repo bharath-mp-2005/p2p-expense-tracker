@@ -1,75 +1,103 @@
 # XO Expense Tracker
 
-XO is a Next.js app for shared rooms, expenses, members, invites, and chat. It uses Supabase for authentication and database access.
+XO Expense Tracker is a Next.js app for splitting expenses across shared rooms. It supports both guest users and Supabase-authenticated users, with rooms, invites, balances, transactions, members, and chat.
 
-## Supabase auth map
+## What It Does
 
-The app already has Supabase auth wired in these places:
+- Create or join expense rooms with a room code.
+- Track balances, transactions, and member activity.
+- Use guest mode without signing up.
+- Sign up or log in with Supabase Auth to keep rooms tied to a real account.
+- Invite people into a room through shareable invite flows.
 
-- [Browser Supabase client](lib/supabase/client.ts) - creates the client used in the browser.
-- [Server Supabase client](lib/supabase/server.ts) - creates a server-side client for route handlers and server components.
-- [Session middleware](lib/supabase/middleware.ts) - refreshes the session and redirects unauthenticated users when needed.
-- [Root middleware entry](middleware.ts) - runs the session update logic for matching routes.
+## Tech Stack
+
+- Next.js 16
+- React 19
+- TypeScript
+- Supabase Auth + Supabase database access
+- Tailwind CSS
+- Radix UI components
+
+## Supabase Auth Map
+
+The auth flow is already wired in these files:
+
+- [Browser Supabase client](lib/supabase/client.ts) - browser-side Supabase client and guest-user helpers.
+- [Server Supabase client](lib/supabase/server.ts) - server-side Supabase client for route handlers and server components.
+- [Session middleware](lib/supabase/middleware.ts) - refreshes sessions and protects routes that need a logged-in user.
+- [Root middleware entry](middleware.ts) - runs the session update logic for matching requests.
 - [Auth callback route](app/auth/callback/route.ts) - exchanges the Supabase auth code for a session.
 - [Login page](app/auth/login/page.tsx) - signs users in with email and password.
-- [Signup page](app/auth/signup/page.tsx) - creates new users with Supabase Auth and stores profile data.
+- [Signup page](app/auth/signup/page.tsx) - creates new users and stores profile data.
 - [Dashboard](app/dashboard/page.tsx) - checks for an active session and falls back to a guest user.
 
-If you were adding Supabase auth to a project that did not already have it, the minimum pieces are:
+## Environment Variables
 
-1. Install the Supabase packages.
-2. Create browser and server clients.
-3. Add login and signup pages.
-4. Add a callback route for OAuth or email-link flows.
-5. Add middleware to keep sessions fresh.
-6. Add the Supabase environment variables.
-
-## Environment variables
-
-Create a `.env.local` file with your Supabase values:
+Copy [.env.example](.env.example) to [.env.local](.env.local) and fill in your Supabase values:
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=your_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 ```
 
-## Run locally
+Do not commit [.env.local](.env.local) or any secret keys.
+
+## Local Setup
+
+1. Install dependencies:
 
 ```bash
 pnpm install
+```
+
+2. Start the app:
+
+```bash
 pnpm dev
 ```
 
-## Commit and push to GitHub
+3. Open the app in your browser and test guest mode, login, and signup.
 
-1. Open a terminal in the project root.
-2. Check what changed:
+## Available Scripts
 
-```bash
-git status
-```
+- `pnpm dev` - start the development server.
+- `pnpm build` - create a production build.
+- `pnpm start` - start the production server.
+- `pnpm lint` - run ESLint.
 
-3. Stage the README:
+## GitHub Repo Setup
 
-```bash
-git add README.md
-```
+The project has already been initialized and pushed to:
 
-4. Create a commit:
+https://github.com/bharath-mp-2005/p2p-expense-tracker.git
 
-```bash
-git commit -m "Add README and Supabase auth notes"
-```
-
-5. Push to GitHub:
+If you need to repeat the process in a new folder, use:
 
 ```bash
-git push origin main
+git init
+git branch -M main
+git remote add origin https://github.com/bharath-mp-2005/p2p-expense-tracker.git
+git add .
+git commit -m "Initial commit"
+git push -u origin main
 ```
 
-If your branch is not `main`, replace it with your current branch name.
+If GitHub asks for authentication, sign in with your GitHub account or use a personal access token if required by your Git setup.
+
+## Recommended GitHub Description
+
+Shared expense tracker built with Next.js and Supabase for rooms, invites, balances, transactions, and chat.
+
+## Deployment Notes
+
+If you deploy to Vercel or another host, make sure these environment variables are added there too:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
 ## Notes
 
-- Do not commit `.env.local` or any secret keys.
-- If you have already pushed secrets, rotate them before pushing again.
+- `.env*.local` is ignored in [.gitignore](.gitignore), so local secrets stay out of git.
+- The app includes both authenticated flows and guest-user fallback flows.
+- If you already pushed secrets anywhere public, rotate them before pushing again.
