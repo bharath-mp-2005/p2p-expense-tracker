@@ -86,6 +86,12 @@ pnpm install
 Copy the example environment file and fill in your Supabase credentials:
 
 ```bash
+Copy-Item .env.example .env.local
+```
+
+On macOS or Linux, the equivalent command is:
+
+```bash
 cp .env.example .env.local
 ```
 
